@@ -371,21 +371,38 @@ export default function App() {
       <footer style={{
         marginTop: '6rem',
         borderTop: '1px solid var(--border-color)',
-        paddingTop: '1.5rem',
+        paddingTop: '2rem',
+        paddingBottom: '2rem',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         flexWrap: 'wrap',
-        gap: '1rem',
-        color: 'var(--text-muted)',
-        fontSize: '0.8rem'
+        gap: '2rem'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <ShieldCheck size={16} style={{ color: 'var(--success-color)' }} />
-          <span>Local client-side execution. No account passwords required.</span>
+        {/* Column 1: Privacy Info */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', flex: '1 1 250px' }}>
+          <ShieldCheck size={18} style={{ color: 'var(--success-color)', marginTop: '2px', flexShrink: 0 }} />
+          <div>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-main)', fontWeight: 600, marginBottom: '0.2rem' }}>Privacy Secured</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+              All analysis runs 100% locally in your browser. Your data never leaves your computer and no password is required.
+            </p>
+          </div>
         </div>
-        <div>
-          <span>Created by Dnyaneshwar Kokate • Miracle Developers</span>
+
+        {/* Column 2: Company Contact Details */}
+        <div style={{ flex: '1 1 300px', fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+          <p style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.4rem' }}>Miracle Developers</p>
+          <p>Sinnar, Nashik, Maharashtra, 422103</p>
+          <p style={{ marginTop: '0.25rem' }}>
+            Mobile: <a href="tel:+918956902893" style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 500 }}>+91 89569 02893</a>
+          </p>
+        </div>
+
+        {/* Column 3: Copyright */}
+        <div style={{ textAlign: 'right', flex: '1 1 220px', fontSize: '0.75rem', color: 'var(--text-secondary)', alignSelf: 'center' }}>
+          <p>© {new Date().getFullYear()} Dnyaneshwar Kokate</p>
+          <p style={{ color: 'var(--text-muted)', marginTop: '0.15rem' }}>Miracle Developers • All Rights Reserved</p>
         </div>
       </footer>
       
