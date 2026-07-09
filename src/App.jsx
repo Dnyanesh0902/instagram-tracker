@@ -48,19 +48,19 @@ export default function App() {
     const validFollowers = followers.filter(f => f && typeof f.username === 'string');
     const validFollowing = following.filter(f => f && typeof f.username === 'string');
 
-    const followersSet = new Set(validFollowers.map(f => f.username.toLowerCase()));
-    const followingSet = new Set(validFollowing.map(f => f.username.toLowerCase()));
+    const followersSet = new Set(validFollowers.map(f => f.username.trim().toLowerCase()));
+    const followingSet = new Set(validFollowing.map(f => f.username.trim().toLowerCase()));
 
     const notFollowingBack = validFollowing.filter(
-      user => !followersSet.has(user.username.toLowerCase())
+      user => !followersSet.has(user.username.trim().toLowerCase())
     );
 
     const dontFollowBack = validFollowers.filter(
-      user => !followingSet.has(user.username.toLowerCase())
+      user => !followingSet.has(user.username.trim().toLowerCase())
     );
 
     const mutuals = validFollowing.filter(
-      user => followersSet.has(user.username.toLowerCase())
+      user => followersSet.has(user.username.trim().toLowerCase())
     );
 
     return {

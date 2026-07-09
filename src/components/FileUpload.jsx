@@ -129,7 +129,7 @@ export default function FileUpload({ onDataLoaded, onLoadSampleData }) {
         const zip = await JSZip.loadAsync(zipFile);
         
         const followerFiles = [];
-        let followingFileKey = null;
+        const followingFiles = [];
 
         // Resiliently look for JSON files by matching names anywhere in the zip structure
         zip.forEach((relativePath, file) => {
@@ -137,26 +137,26 @@ export default function FileUpload({ onDataLoaded, onLoadSampleData }) {
             const fileName = relativePath.split('/').pop();
             if (fileName.startsWith('followers_') && fileName.endsWith('.json')) {
               followerFiles.push(file);
-            } else if (fileName === 'following.json') {
-              followingFileKey = file;
+            } else if (fileName.startsWith('following') && fileName.endsWith('.json')) {
+              followingFiles.push(file);
             }
           }
         });
 
-        if (followerFiles.length === 0 && !followingFileKey) {
-          throw new Error("Could not find any follower or following JSON files inside the ZIP archive. Check if you downloaded in JSON format.");
+        if (followerFiles.length === 0 || followingFiles.length === 0) {
+          throw new Error("Could not find both follower and following JSON files inside the ZIP archive. Check if you downloaded in JSON format.");
         }
 
-        setStatus(`Found ${followerFiles.length} follower list(s) and 1 following list inside ZIP. Parsing...`);
+        setStatus(`Found ${followerFiles.length} follower list(s) and ${followingFiles.length} following list(s) inside ZIP. Parsing...`);
 
-        // Parse following
-        if (followingFileKey) {
-          const followingDataStr = await followingFileKey.async('text');
+        // Parse all following files (can be multiple files for large accounts)
+        for (const file of followingFiles) {
+          const followingDataStr = await file.async('text');
           try {
             const parsed = JSON.parse(followingDataStr);
-            followingList = parseFollowingJSON(parsed);
+            followingList = followingList.concat(parseFollowingJSON(parsed));
           } catch (e) {
-            console.error('Error parsing following.json:', e);
+            console.error(`Error parsing following file ${file.name}:`, e);
           }
         }
 
@@ -167,7 +167,7 @@ export default function FileUpload({ onDataLoaded, onLoadSampleData }) {
             const parsed = JSON.parse(dataStr);
             followersList = followersList.concat(parseFollowersJSON(parsed));
           } catch (e) {
-            console.error(`Error parsing ${file.name}:`, e);
+            console.error(`Error parsing follower file ${file.name}:`, e);
           }
         }
       } 
@@ -182,7 +182,7 @@ export default function FileUpload({ onDataLoaded, onLoadSampleData }) {
             if (file.name.includes('follower')) {
               followersList = followersList.concat(parseFollowersJSON(parsed));
             } else if (file.name.includes('following')) {
-              followingList = parseFollowingJSON(parsed);
+              followingList = followingList.concat(parseFollowingJSON(parsed));
             }
           }
         }
